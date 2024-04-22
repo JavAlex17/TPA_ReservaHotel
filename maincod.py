@@ -15,7 +15,7 @@ class MainWin(QMainWindow):
         self.setMinimumSize(600, 500)
         self.initUI()
         
-    def initUI(self):  # sourcery skip: extract-duplicate-method
+    def initUI(self):
         layout = QVBoxLayout(self.central_widget)
         
         #Imagen
