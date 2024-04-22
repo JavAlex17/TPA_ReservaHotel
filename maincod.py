@@ -28,13 +28,13 @@ class MainWin(QMainWindow):
         #Titulo de bienvenida
         welcome_label = QLabel("¡Bienvenido al Hotel CTCh!")
         welcome_label.setStyleSheet("color: #686961; font-style: italic; font-weight: bold")
-        welcome_label.setFont(QFont("Arial", 27))
+        welcome_label.setFont(QFont("Segoe UI", 27))
         welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(welcome_label)
         
         #Subtitulo estilo html
         sub_label = QLabel(
-            "<span style='color: #686961; font-size: 13pt; line-height: 1.15;'>"
+            "<span style='color: #686961; font-size: 13pt; line-height: 1.2;'>"
             "Un espacio de descanso y relajación, con multiples  <br>"
             "instalaciones y actividades enfocadas en la reconección con la naturaleza <br>"
             " con todo el lujo y a comodidad de un hotel 5 estrellas."
@@ -47,7 +47,7 @@ class MainWin(QMainWindow):
         #Boton de entrar
         botonEntrar = QPushButton("Entrar")
         botonEntrar.setStyleSheet("background-color: #BAB78D; color: #686961;")
-        botonEntrar.setFont(QFont("Arial", 15))
+        botonEntrar.setFont(QFont("Segoe UI", 15))
         botonEntrar.setFixedSize(140,40)  # Ancho máximo del botón
         layout.addWidget(botonEntrar, alignment=Qt.AlignmentFlag.AlignCenter)  # Centrar el botón en el layout
 

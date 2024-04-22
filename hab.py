@@ -16,7 +16,7 @@ class VentanaHabitaciones(QDialog):
         # Título
         title_label = QLabel("Habitaciones")
         title_label.setStyleSheet("color: #686961; font-style: italic")
-        title_label.setFont(QFont("Arial", 30, QFont.Weight.Bold))
+        title_label.setFont(QFont("Segoe UI", 27, QFont.Weight.Bold))
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
         
@@ -65,7 +65,7 @@ class VentanaHabitaciones(QDialog):
         self.info_label = QLabel()
         self.actualizar_info()
         self.info_label.setStyleSheet("color: #686961;")
-        self.info_label.setFont(QFont("Arial", 12))
+        self.info_label.setFont(QFont("Segoe UI", 12))
         self.info_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.info_label)
         
@@ -73,10 +73,10 @@ class VentanaHabitaciones(QDialog):
     #Funcion para actualizar la informacion
     #Informacion estilizada con html
     def actualizar_info(self):
-        nombre_habitacion = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.2;'>{self.ListaNombres[self.indice]}</div>"
-        capacidad_personas = f"<div style='margin-left: 50px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaCapacidad[self.indice]}</div>"
-        servicios_destacados = f"<div style='margin-left: 50px; font-size: 12pt; line-height: 1.2;'>Servicios destacados: {self.ListaDestacados[self.indice]}</div>"
-        texto = "<div style='margin-left: 50px; font-size; line-height: 1.2;'>Todas las reservas incluyen desayuno continental para todos los pasajeros.</div>"
+        nombre_habitacion = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.15;'>{self.ListaNombres[self.indice]}</div>"
+        capacidad_personas = f"<div style='margin-left: 50px; font-size: 12pt; line-height: 1.15;'>Capacidad de Personas: {self.ListaCapacidad[self.indice]}</div>"
+        servicios_destacados = f"<div style='margin-left: 50px; font-size: 12pt; line-height: 1.15;'>Servicios destacados: {self.ListaDestacados[self.indice]}</div>"
+        texto = "<div style='margin-left: 50px; font-size: 12pt; line-height: 1.15;'>Todas las reservas incluyen desayuno continental para todos los pasajeros.</div>"
         info = f"{nombre_habitacion}{capacidad_personas}{servicios_destacados}{texto}"
         self.info_label.setText(info)
         
