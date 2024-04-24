@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from hab import VentanaHabitaciones
+from log import Login
 
 class MainWin(QMainWindow):
     def __init__(self):
@@ -63,10 +64,26 @@ class MainWin(QMainWindow):
 
         botonEntrar.clicked.connect(self.abrirVentanaHabitaciones)
         
+        #Texto para acceso administrador
+        texto_acceso = QLabel("Acceso Administrador")
+        texto_acceso.setStyleSheet("color: #686961; text-decoration: underline;")
+        texto_acceso.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(texto_acceso)
+        
+        #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
+        texto_acceso.mousePressEvent = lambda event: self.abrirAccesoAdmin()
+        
+        
     def abrirVentanaHabitaciones(self):
         self.close()
         ventana_habitaciones = VentanaHabitaciones()
         ventana_habitaciones.exec()
+        
+    def abrirAccesoAdmin(self):
+        self.close()
+        loginadmin = Login()
+        loginadmin.exec()
+        
         
     
         
