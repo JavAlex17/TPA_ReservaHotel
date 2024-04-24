@@ -57,7 +57,7 @@ class MainWin(QMainWindow):
         
         #Boton de entrar
         botonEntrar = QPushButton("Entrar")
-        botonEntrar.setStyleSheet("background-color: #BAB78D; color: #686961;")
+        botonEntrar.setStyleSheet("background-color: #BAB78D; color: #FEFEFF;")
         botonEntrar.setFont(QFont(font, 15))
         botonEntrar.setFixedSize(140,40)  # Ancho máximo del botón
         layout.addWidget(botonEntrar, alignment=Qt.AlignmentFlag.AlignCenter)  # Centrar el botón en el layout

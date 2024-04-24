@@ -22,11 +22,18 @@ class Login(QDialog):
         
         
         #Lista de Recepcionistas
-        self.ListaAdmin = [{"Recepcionista1":"12345"},{"Recepcionista":"6789"}]
+        self.ListaRecepcionista = [{"Recepcionista1":"12345"},{"Recepcionista":"6789"}]
         
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
         layout.setContentsMargins(10, 30, 10, 10)
+        
+        #Imagen
+        image_label = QLabel(self)
+        pixmap = QPixmap("images/logo.png").scaledToWidth(150)  # Ruta de la imagen
+        image_label.setPixmap(pixmap)
+        image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(image_label)
         
         # Título
         layout_titulo = QVBoxLayout()
@@ -39,7 +46,7 @@ class Login(QDialog):
         
         tituloWidget = QWidget()
         tituloWidget.setLayout(layout_titulo)
-        tituloWidget.setFixedHeight(150)
+        tituloWidget.setFixedHeight(80)
         
         layout.addWidget(tituloWidget)
         
@@ -54,7 +61,7 @@ class Login(QDialog):
         layoutUsuario.addWidget(usuarioLabel)
         
         self.usuarioInput = QLineEdit()
-        self.usuarioInput.setStyleSheet("background-color: #A6A6A6 ;color: #FEFEFF;")
+        self.usuarioInput.setStyleSheet("background-color: #D9D9D9 ;color: #FEFEFF;")
         self.usuarioInput.setFont(QFont(font, 12))
         self.usuarioInput.setFixedWidth(200)
         self.usuarioInput.setFixedHeight(25)
@@ -71,7 +78,7 @@ class Login(QDialog):
         layoutPass.addWidget(passLabel)
         
         self.passInput = QLineEdit()
-        self.passInput.setStyleSheet("background-color: #A6A6A6 ;color: #FEFEFF;")
+        self.passInput.setStyleSheet("background-color: #D9D9D9 ;color: #FEFEFF;")
         self.passInput.setFont(QFont(font,12))
         self.passInput.setFixedWidth(200)
         self.passInput.setFixedHeight(25)
@@ -83,13 +90,13 @@ class Login(QDialog):
         layoutboton.setContentsMargins(200, 50, 200, 0)
         
         botonAtras = QPushButton("Volver")
-        botonAtras.setStyleSheet("background-color: #BAB78D; color: #686961;")
+        botonAtras.setStyleSheet("background-color: #D9D9D9; color: #686961;")
         botonAtras.setFont(QFont(font, 13))
         botonAtras.clicked.connect(self.volverMain)
         layoutboton.addWidget(botonAtras, alignment=Qt.AlignmentFlag.AlignLeft)
         
         botonLogin = QPushButton("Login")
-        botonLogin.setStyleSheet("background-color: #BAB78D; color: #686961;")
+        botonLogin.setStyleSheet("background-color: #BAB78D; color: #FEFEFF;")
         botonLogin.setFont(QFont(font, 13))
         botonLogin.clicked.connect(self.iniciarSesion)
         layoutboton.addWidget(botonLogin, alignment=Qt.AlignmentFlag.AlignRight)
