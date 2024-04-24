@@ -23,7 +23,7 @@ class MainWin(QMainWindow):
         
     def initUI(self, font):
         layout = QVBoxLayout(self.central_widget)
-        layout.setContentsMargins(0, 20, 0, 5)
+        layout.setContentsMargins(10, 25, 20, 20)
         
         #Imagen
         image_label = QLabel(self)
@@ -34,7 +34,7 @@ class MainWin(QMainWindow):
         
         #Titulo de bienvenida
         welcome_label = QLabel("¡Bienvenido al Hotel CTCh!")
-        welcome_label.setStyleSheet("color: #686961; font-style: italic; font-weight: bold")
+        welcome_label.setStyleSheet("color: #686961; font-weight: bold; line-height 1.15")
         welcome_label.setFont(QFont(font, 25))
         welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(welcome_label)
@@ -67,22 +67,23 @@ class MainWin(QMainWindow):
         #Texto para acceso administrador
         texto_acceso = QLabel("Acceso Administrador")
         texto_acceso.setStyleSheet("color: #686961; text-decoration: underline;")
+        texto_acceso.setFont(QFont(font, 12))
         texto_acceso.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
         layout.addWidget(texto_acceso)
         
         #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        texto_acceso.mousePressEvent = lambda event: self.abrirAccesoAdmin()
+        texto_acceso.mousePressEvent = lambda event: self.abrirAccesoRecepcionista()
         
         
     def abrirVentanaHabitaciones(self):
         self.close()
         ventana_habitaciones = VentanaHabitaciones()
-        ventana_habitaciones.exec()
+        ventana_habitaciones.show()
         
-    def abrirAccesoAdmin(self):
+    def abrirAccesoRecepcionista(self):
         self.close()
-        loginadmin = Login()
-        loginadmin.exec()
+        loginRecepcionista = Login(main_win=self)
+        loginRecepcionista.exec()
         
         
     
