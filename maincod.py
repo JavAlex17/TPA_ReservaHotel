@@ -64,8 +64,8 @@ class MainWin(QMainWindow):
 
         botonEntrar.clicked.connect(self.abrirVentanaHabitaciones)
         
-        #Texto para acceso administrador
-        texto_acceso = QLabel("Acceso Administrador")
+        #Texto para acceso recepcionista
+        texto_acceso = QLabel("Acceso Recepcionista")
         texto_acceso.setStyleSheet("color: #686961; text-decoration: underline;")
         texto_acceso.setFont(QFont(font, 12))
         texto_acceso.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)

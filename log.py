@@ -61,10 +61,10 @@ class Login(QDialog):
         layoutUsuario.addWidget(usuarioLabel)
         
         self.usuarioInput = QLineEdit()
-        self.usuarioInput.setStyleSheet("background-color: #D9D9D9 ;color: #FEFEFF;")
+        self.usuarioInput.setStyleSheet("background-color: #D9D9D9 ;color: #686961;")
         self.usuarioInput.setFont(QFont(font, 12))
         self.usuarioInput.setFixedWidth(200)
-        self.usuarioInput.setFixedHeight(25)
+        self.usuarioInput.setFixedHeight(26)
         layoutUsuario.addWidget(self.usuarioInput)
         
         layout.addLayout(layoutUsuario)
@@ -78,10 +78,10 @@ class Login(QDialog):
         layoutPass.addWidget(passLabel)
         
         self.passInput = QLineEdit()
-        self.passInput.setStyleSheet("background-color: #D9D9D9 ;color: #FEFEFF;")
+        self.passInput.setStyleSheet("background-color: #D9D9D9 ;color: #686961;")
         self.passInput.setFont(QFont(font,12))
         self.passInput.setFixedWidth(200)
-        self.passInput.setFixedHeight(25)
+        self.passInput.setFixedHeight(26)
         layoutPass.addWidget(self.passInput)
         
         layout.addLayout(layoutPass)
@@ -98,16 +98,29 @@ class Login(QDialog):
         botonLogin = QPushButton("Login")
         botonLogin.setStyleSheet("background-color: #BAB78D; color: #FEFEFF;")
         botonLogin.setFont(QFont(font, 13))
-        botonLogin.clicked.connect(self.iniciarSesion)
-        layoutboton.addWidget(botonLogin, alignment=Qt.AlignmentFlag.AlignRight)
         
+        botonLogin.clicked.connect(self.iniciarSesion)
+                
+        layoutboton.addWidget(botonLogin, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addLayout(layoutboton)
         
     def iniciarSesion(self):
-        self.close()
-        ingresarReservas = Reservas()
-        ingresarReservas.exec()
+        usuario = self.usuarioInput.text()
+        password = self.passInput.text()
+        i = 0
         
+        while i < len(self.ListaRecepcionista):      
+            i += 1
+            for recepcionista in self.ListaRecepcionista:
+                if usuario in recepcionista and recepcionista[usuario] == password:
+                    self.close()
+                    ingresarReservas = Reservas()
+                    ingresarReservas.exec()
+                    return 
+            if i == len(self.ListaRecepcionista):
+                print("Error en las credenciales")
+                    
+                          
     def volverMain(self):
         self.close()
         if self.main_win:

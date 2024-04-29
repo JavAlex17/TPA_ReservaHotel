@@ -1,18 +1,14 @@
-import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
-from restaurante import VentanaRestaurante
 
-
-
-class VentanaHabitaciones(QDialog):
+class VentanaAreas(QDialog):
     def __init__(self):
         super().__init__()
 
 
-        self.setWindowTitle("Habitaciones")
+        self.setWindowTitle("Áreas Comunes")
         self.setStyleSheet("background-color: #fefeff;")
         self.setMinimumSize(590, 560)
     
@@ -65,7 +61,7 @@ class VentanaHabitaciones(QDialog):
         
         layout_titulo = QVBoxLayout()
         # Título
-        self.tituloHab = QLabel("Habitaciones")
+        self.tituloHab = QLabel("Áreas Comunes")
         self.tituloHab.setStyleSheet("color: #686961;")
         self.tituloHab.setFont(QFont(font, 26, QFont.Weight.Bold))
         self.tituloHab.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -78,15 +74,13 @@ class VentanaHabitaciones(QDialog):
         
         layout.addWidget(tituloWidget)
         
-        #Listas habitaciones
-        self.ListaImagenes = ["images/hab1.png", "images/hab2.jpg", "images/hab3.jpg", "images/hab4.jpg", "images/hab5.jpg"]
-        self.ListaDisponibilidad = [10,10,10,1,1]
-        self.ListaNombres = ["Habitación Ejecutiva Individual", "Habitación Ejecutiva Doble", "Habitación Familiar", "PentHouse Volcanes", "PentHouse Pacífico"]
-        self.ListaPrecios = ["$50.000", "$80.000", "$150.000", "$1.080.000", "$1.080.000"]
-        self.ListaCapacidad = ["2 (1 Recomendado)", "4 (2 Recomendado)", "8 (6 Recomendado)", "2 (Invitados temporales indefinidos)", "2 (Invitados temporales indefinidos)"]
-        self.ListaDestacados = ["Ninguno.", "Ninguno.", "Habitación matrimonial y<br>habitación con camarotes dobles.", "Terraza al aire libre, habitación<br>principal y habitación de invitados.", "Terraza al aire libre, habitación<br>principal y habitación de invitados."]
-
-        #Indice habitacion
+        #Listas Areas Comunes
+        self.ListaImagenes = ["images/area1.png", "images/area2.jpg", "images/area3.jpg", "imagen/area4.jpg","imagen/area5.jpg", "imagen/area6.jpg"]
+        self.ListaNombres = ["Terrenos Bosque Nativo", "Áreas Recreativas", "Piscinas", "Tinas Calientes SPA", "Gimnasio", "Juegos Infantiles"]
+        self.ListaDescripcion = []
+    
+        
+        #Indice areas
         self.indice = 0
         
         #Layout horizontal para la imagen y los botones
@@ -102,7 +96,7 @@ class VentanaHabitaciones(QDialog):
         self.boton_atras.mousePressEvent = lambda event: self.atras()
         hbox.addWidget(self.boton_atras)
         
-        #Imagen habitaciones
+        #Imagen Comida
         self.image_label = QLabel(self)
         pixmap = QPixmap(self.ListaImagenes[self.indice]).scaledToWidth(400)  # Ruta de la imagen
         self.image_label.setPixmap(pixmap)
@@ -129,30 +123,15 @@ class VentanaHabitaciones(QDialog):
         self.info_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.info_label)
         
-        texto = QLabel(
-            "<div style='margin-left: 45px; font-size: 10pt; line-height: 1.2;'>*Todas las reservas incluyen desayuno continental para todos los pasajeros.</div>")
-        texto.setAlignment(Qt.AlignmentFlag.AlignBottom)
-        layout.addWidget(texto)
-        
-        #Texto para acceso administrador
-        texto_acceso = QLabel("Entrar Restaurante")
-        texto_acceso.setStyleSheet("color: #686961; text-decoration: underline;")
-        texto_acceso.setFont(QFont(font, 12))
-        texto_acceso.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
-        layout.addWidget(texto_acceso)
-        
-        #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        texto_acceso.mousePressEvent = lambda event: self.abrirAccesoRestaurante()
         
     #Funcion para actualizar la informacion
     #Informacion estilizada con html
     def actualizar_info(self):
-        nombre_habitacion = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.8;'>{self.ListaNombres[self.indice]} - {self.ListaPrecios[self.indice]}</div>"
-        disponibilidad = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Disponibilidad: {self.ListaDisponibilidad[self.indice]}</div>"
-        capacidad_personas = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaCapacidad[self.indice]}</div>"
-        servicios_destacados = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Servicios destacados: {self.ListaDestacados[self.indice]}</div>"
-        info = f"{nombre_habitacion}{disponibilidad}{capacidad_personas}{servicios_destacados}"
+        nombre_plan = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.8;'>{self.ListaNombres[self.indice]} - {self.ListaPrecios[self.indice]}</div>"
+        descripcion = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaDescripcion[self.indice]}</div>"
+        info = f"{nombre_plan}{descripcion}"
         self.info_label.setText(info)
+        self.info_label.setWordWrap(True)
         
     #Funcion botones   
     def siguiente(self):
@@ -174,15 +153,7 @@ class VentanaHabitaciones(QDialog):
         pixmap = QPixmap(self.ListaImagenes[self.indice]).scaledToWidth(400)
         self.image_label.setPixmap(pixmap)
         
-    def abrirAccesoRestaurante(self):
-        self.close()
-        restaurante= VentanaRestaurante()
-        restaurante.exec()
-        
         
     def volverMain(self):
         pass
             
-    
-        
-
