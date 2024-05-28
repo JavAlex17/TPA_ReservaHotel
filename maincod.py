@@ -4,6 +4,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from hab import VentanaHabitaciones
 from log import Login
+from menu import MenuDesplegable
 
 class MainWin(QMainWindow):
     def __init__(self):
@@ -85,7 +86,7 @@ class MainWin(QMainWindow):
         loginRecepcionista = Login(main_win=self)
         loginRecepcionista.exec()
         
-        
+
     
         
 if __name__ == '__main__':

@@ -1,10 +1,8 @@
-import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
-from restaurante import VentanaRestaurante
-
+#from menu import MenuDesplegable
 
 
 class VentanaHabitaciones(QDialog):
@@ -35,7 +33,7 @@ class VentanaHabitaciones(QDialog):
         self.botonMenu.setPixmap(pixmap_btnmenu)
         self.botonMenu.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        #self.botonMenu.mousePressEvent = lambda event: self.abrirMenu()
+        self.botonMenu.mousePressEvent = lambda event: self.toggleMenu()
     
         appbar_layout.addWidget(self.botonMenu,0,0)
         
@@ -43,7 +41,7 @@ class VentanaHabitaciones(QDialog):
         tituloHotel = QLabel("Hotel CTCh")
         tituloHotel.setStyleSheet('color: #604B32;')
         tituloHotel.setFont(QFont(font, 19))
-        tituloHotel.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        tituloHotel.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         appbar_layout.addWidget(tituloHotel,0,1)
         
         #Logo del hotel a la derecha de la appBar
@@ -53,7 +51,7 @@ class VentanaHabitaciones(QDialog):
         self.logo_appbar.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         appbar_layout.addWidget(self.logo_appbar,0,2)
         #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        self.logo_appbar.mousePressEvent = lambda event: self.volverMain()
+        #self.logo_appbar.mousePressEvent = lambda event: self.volverMain()
         
         #appbar como widget para agregarle color
         appbarWidget = QWidget()
@@ -62,6 +60,25 @@ class VentanaHabitaciones(QDialog):
         appbarWidget.setFixedHeight(65)
         
         layout.addWidget(appbarWidget)
+        
+        
+        # Crear el menú desplegable
+        self.menu = QWidget(self)
+        self.menu.setStyleSheet("background-color: #fefeff; border: 1px solid #BAB78D;")
+        self.menu.setFixedWidth(250)
+        self.menu.setGeometry(11, 75, 150, self.height() - 80)  # Posicionar debajo de la appBar
+        self.menu.raise_()  # Asegurar que el menú está sobre todos los demás widgets
+        
+        menu_layout = QVBoxLayout(self.menu)
+        opciones = ["Habitaciones", "Opción 2", "Opción 3", "Opción 4"]
+        for opcion in opciones:
+            boton = QPushButton(opcion, self.menu)
+            boton.setStyleSheet("background-color: #BAB78D; color: #FEFEFF;")
+            boton.setFont(QFont(font, 12))
+            boton.setFixedHeight(50)
+            menu_layout.addWidget(boton)
+        
+        self.menu.hide()
         
         layout_titulo = QVBoxLayout()
         # Título
@@ -134,15 +151,16 @@ class VentanaHabitaciones(QDialog):
         texto.setAlignment(Qt.AlignmentFlag.AlignBottom)
         layout.addWidget(texto)
         
-        #Texto para acceso administrador
-        texto_acceso = QLabel("Entrar Restaurante")
-        texto_acceso.setStyleSheet("color: #686961; text-decoration: underline;")
-        texto_acceso.setFont(QFont(font, 12))
-        texto_acceso.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
-        layout.addWidget(texto_acceso)
+    
         
-        #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        texto_acceso.mousePressEvent = lambda event: self.abrirAccesoRestaurante()
+     # Función para mostrar/ocultar el menú
+    def toggleMenu(self):
+        if self.menu.isVisible():
+            self.menu.hide()
+        else:
+            self.menu.show()
+            self.menu.raise_()  # Asegurar que el menú está sobre todos los demás widgets
+
         
     #Funcion para actualizar la informacion
     #Informacion estilizada con html
@@ -174,10 +192,7 @@ class VentanaHabitaciones(QDialog):
         pixmap = QPixmap(self.ListaImagenes[self.indice]).scaledToWidth(400)
         self.image_label.setPixmap(pixmap)
         
-    def abrirAccesoRestaurante(self):
-        self.close()
-        restaurante= VentanaRestaurante()
-        restaurante.exec()
+
         
         
     def volverMain(self):

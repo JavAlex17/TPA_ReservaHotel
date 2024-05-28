@@ -40,7 +40,7 @@ class VentanaRestaurante(QDialog):
         tituloHotel = QLabel("Hotel CTCh")
         tituloHotel.setStyleSheet('color: #604B32;')
         tituloHotel.setFont(QFont(font, 19))
-        tituloHotel.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        tituloHotel.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         appbar_layout.addWidget(tituloHotel,0,1)
         
         #Logo del hotel a la derecha de la appBar
@@ -86,12 +86,9 @@ class VentanaRestaurante(QDialog):
                                  "Incluye tiempo de chef dedicado a todo momento para satisfacer los gustos exclusivos y peticiones específicas de los pasajeros para una cantidad no determinada de comidas al día."
                                  ]
         
-        #self.ListaCapacidad = ["2 (1 Recomendado)", "4 (2 Recomendado)", "8 (6 Recomendado)", "2 (Invitados temporales indefinidos)", "2 (Invitados temporales indefinidos)"]
-        #self.ListaDestacados = ["Ninguno.", "Ninguno.", "Habitación matrimonial y<br>habitación con camarotes dobles.", "Terraza al aire libre, habitación<br>principal y habitación de invitados.", "Terraza al aire libre, habitación<br>principal y habitación de invitados."]
-        #self.ListaDisponibilidad = [10,10,10,1,1]
         
         
-        #Indice habitacion
+        #Indice
         self.indice = 0
         
         #Layout horizontal para la imagen y los botones
@@ -143,7 +140,7 @@ class VentanaRestaurante(QDialog):
     #Informacion estilizada con html
     def actualizar_info(self):
         nombre_plan = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.8;'>{self.ListaNombres[self.indice]} - {self.ListaPrecios[self.indice]}</div>"
-        descripcion = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaDescripcion[self.indice]}</div>"
+        descripcion = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>{self.ListaDescripcion[self.indice]}</div>"
         info = f"{nombre_plan}{descripcion}"
         self.info_label.setText(info)
         self.info_label.setWordWrap(True)
