@@ -77,7 +77,7 @@ class VentanaAreas(QDialog):
         #Listas Areas Comunes
         self.ListaImagenes = ["images/area1.png", "images/area2.jpg", "images/area3.jpg", "imagen/area4.jpg","imagen/area5.jpg", "imagen/area6.jpg"]
         self.ListaNombres = ["Terrenos Bosque Nativo", "Áreas Recreativas", "Piscinas", "Tinas Calientes SPA", "Gimnasio", "Juegos Infantiles"]
-        self.ListaDescripcion = []
+        #self.ListaDescripcion = []
     
         
         #Indice areas
@@ -127,9 +127,9 @@ class VentanaAreas(QDialog):
     #Funcion para actualizar la informacion
     #Informacion estilizada con html
     def actualizar_info(self):
-        nombre_plan = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.8;'>{self.ListaNombres[self.indice]} - {self.ListaPrecios[self.indice]}</div>"
-        descripcion = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaDescripcion[self.indice]}</div>"
-        info = f"{nombre_plan}{descripcion}"
+        nombre_plan = f"<div style='color: #686961; font-size: 16pt; margin-left: 20px; font-style: italic; line-height: 1.8;'>{self.ListaNombres[self.indice]}</div>"
+        #descripcion = f"<div style='margin-left: 45px; font-size: 12pt; line-height: 1.2;'>Capacidad de Personas: {self.ListaDescripcion[self.indice]}</div>"
+        info = f"{nombre_plan}"
         self.info_label.setText(info)
         self.info_label.setWordWrap(True)
         
