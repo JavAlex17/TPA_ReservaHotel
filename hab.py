@@ -2,13 +2,16 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
+from areaverde import VentanaAreas
+from excursiones import VentanaExcursiones
+from restaurante import VentanaRestaurante
+
 #from menu import MenuDesplegable
 
 
 class VentanaHabitaciones(QDialog):
     def __init__(self):
         super().__init__()
-
 
         self.setWindowTitle("Habitaciones")
         self.setStyleSheet("background-color: #fefeff;")
@@ -69,14 +72,41 @@ class VentanaHabitaciones(QDialog):
         self.menu.setGeometry(11, 75, 150, self.height() - 80)  # Posicionar debajo de la appBar
         self.menu.raise_()  # Asegurar que el menú está sobre todos los demás widgets
         
+        
         menu_layout = QVBoxLayout(self.menu)
-        opciones = ["Habitaciones", "Opción 2", "Opción 3", "Opción 4"]
+        opciones = ["Habitaciones", "Restaurante", "Excursiones", "Áreas Recreativas", "Reservar", "Volver al Inicio"]
         for opcion in opciones:
+
             boton = QPushButton(opcion, self.menu)
-            boton.setStyleSheet("background-color: #BAB78D; color: #FEFEFF;")
+            boton.setStyleSheet("QPushButton { background-color: transparent; color: #686961; border: none; text-align: left; padding-left: 10px; font-size: 20px;} QPushButton:hover { background-color: #a6a6a6; color: #fefeff; }")
             boton.setFont(QFont(font, 12))
             boton.setFixedHeight(50)
+            
             menu_layout.addWidget(boton)
+        
+        #######
+            # Añadir borde inferior a todos los botones excepto al último
+            if opcion != opciones[-1]:
+                separator = QLabel(self.menu)
+                separator.setFixedHeight(1)
+                separator.setStyleSheet("background-color: #BAB78D;")
+                menu_layout.addWidget(separator)
+            
+            # Conectar cada botón a su respectiva función
+            if opcion == "Restaurante":
+                boton.clicked.connect(self.mostrar_restaurante)
+            elif opcion == "Excursiones":
+                boton.clicked.connect(self.mostrar_excursiones)
+            elif opcion == "Áreas Recreativas":
+                boton.clicked.connect(self.mostrar_areas_recreativas)
+            elif opcion == "Reservar":
+                boton.clicked.connect(self.mostrar_reservar)
+            elif opcion == "Volver al Inicio":
+                boton.clicked.connect(self.volver_main)
+                
+        #######
+        
+        
         
         self.menu.hide()
         
@@ -195,7 +225,22 @@ class VentanaHabitaciones(QDialog):
 
         
         
-    def volverMain(self):
+    def mostrar_restaurante(self):
+        ventanaRes = VentanaRestaurante()
+        ventanaRes.show()
+        
+    def mostrar_excursiones(self):
+        ventanaExc = VentanaExcursiones()
+        ventanaExc.show()
+    
+    def mostrar_areas_recreativas(self):
+        ventanaAR = VentanaAreas()
+        ventanaAR.show()
+    
+    def mostrar_reservar(self):
+        pass
+        
+    def volver_main(self):
         pass
             
     
