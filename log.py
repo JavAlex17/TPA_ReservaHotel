@@ -38,7 +38,7 @@ class Login(QDialog):
         # Título
         layout_titulo = QVBoxLayout()
         
-        tituloLogin = QLabel("Acceso Recepcionistas")
+        tituloLogin = QLabel("Acceso Recepcionista")
         tituloLogin.setStyleSheet("color: #686961;")
         tituloLogin.setFont(QFont(font, 20, QFont.Weight.Bold))
         tituloLogin.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
@@ -78,6 +78,7 @@ class Login(QDialog):
         layoutPass.addWidget(passLabel)
         
         self.passInput = QLineEdit()
+        self.passInput.setEchoMode(QLineEdit.EchoMode.Password)
         self.passInput.setStyleSheet("background-color: #D9D9D9 ;color: #686961;")
         self.passInput.setFont(QFont(font,12))
         self.passInput.setFixedWidth(200)

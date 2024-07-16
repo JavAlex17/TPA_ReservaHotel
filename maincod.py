@@ -4,7 +4,6 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from hab import VentanaHabitaciones
 from log import Login
-from menu import MenuDesplegable
 
 class MainWin(QMainWindow):
     def __init__(self):
@@ -44,7 +43,7 @@ class MainWin(QMainWindow):
         sub_label = QLabel(
             "<div style='color: #686961; line-height: 1.25;'>"
             "Un espacio de descanso y relajación, <br>"
-            "con multiples instalaciones y<br>"
+            "con múltiples instalaciones y<br>"
             "actividades enfocadas en la<br>"
             "reconexión con la naturaleza con<br>"
             "todo el lujo y la comodidad de un<br>"
@@ -77,14 +76,19 @@ class MainWin(QMainWindow):
         
         
     def abrirVentanaHabitaciones(self):
-        self.close()
-        ventana_habitaciones = VentanaHabitaciones()
-        ventana_habitaciones.show()
+        self.hide()
+        self.ventana_habitaciones = VentanaHabitaciones()
+        # Conectar la señal de vuelta a la ventana principal
+        self.ventana_habitaciones.volver_main_signal.connect(self.mostrarMainWin)
+        self.ventana_habitaciones.show()
         
     def abrirAccesoRecepcionista(self):
         self.close()
         loginRecepcionista = Login(main_win=self)
         loginRecepcionista.exec()
+        
+    def mostrarMainWin(self):
+        self.show()
         
 
     

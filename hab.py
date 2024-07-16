@@ -2,14 +2,15 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
+import json
 from areaverde import VentanaAreas
 from excursiones import VentanaExcursiones
 from restaurante import VentanaRestaurante
 
-#from menu import MenuDesplegable
 
 
 class VentanaHabitaciones(QDialog):
+    volver_main_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
 
@@ -74,7 +75,7 @@ class VentanaHabitaciones(QDialog):
         
         
         menu_layout = QVBoxLayout(self.menu)
-        opciones = ["Habitaciones", "Restaurante", "Excursiones", "Áreas Recreativas", "Reservar", "Volver al Inicio"]
+        opciones = ["Habitaciones", "Restaurante", "Excursiones", "Áreas Recreativas", "Volver al Inicio"]
         for opcion in opciones:
 
             boton = QPushButton(opcion, self.menu)
@@ -99,8 +100,6 @@ class VentanaHabitaciones(QDialog):
                 boton.clicked.connect(self.mostrar_excursiones)
             elif opcion == "Áreas Recreativas":
                 boton.clicked.connect(self.mostrar_areas_recreativas)
-            elif opcion == "Reservar":
-                boton.clicked.connect(self.mostrar_reservar)
             elif opcion == "Volver al Inicio":
                 boton.clicked.connect(self.volver_main)
                 
@@ -127,7 +126,11 @@ class VentanaHabitaciones(QDialog):
         
         #Listas habitaciones
         self.ListaImagenes = ["images/hab1.png", "images/hab2.jpg", "images/hab3.jpg", "images/hab4.jpg", "images/hab5.jpg"]
-        self.ListaDisponibilidad = [10,10,10,1,1]
+        
+        self.ListaDisponibilidad = []
+        # Cargar la disponibilidad desde el archivo JSON al inicio
+        self.cargar_disponibilidad_desde_json("disponibilidad_habitaciones.json")
+        
         self.ListaNombres = ["Habitación Ejecutiva Individual", "Habitación Ejecutiva Doble", "Habitación Familiar", "PentHouse Volcanes", "PentHouse Pacífico"]
         self.ListaPrecios = ["$50.000", "$80.000", "$150.000", "$1.080.000", "$1.080.000"]
         self.ListaCapacidad = ["2 (1 Recomendado)", "4 (2 Recomendado)", "8 (6 Recomendado)", "2 (Invitados temporales indefinidos)", "2 (Invitados temporales indefinidos)"]
@@ -222,26 +225,50 @@ class VentanaHabitaciones(QDialog):
         pixmap = QPixmap(self.ListaImagenes[self.indice]).scaledToWidth(400)
         self.image_label.setPixmap(pixmap)
         
-
+    def cargar_disponibilidad_desde_json(self, filename):
+        with open(filename, 'r') as file:
+            data = json.load(file)
+            habitaciones_data = data.get("habitaciones", [])
+            
+            for habitacion in habitaciones_data:
+                self.ListaDisponibilidad.append(habitacion["disponibilidad"])
         
         
     def mostrar_restaurante(self):
-        ventanaRes = VentanaRestaurante()
-        ventanaRes.show()
+        self.close()
+        self.ventana_restaurante = VentanaRestaurante()
+        self.ventana_restaurante.volver_habitaciones_signal.connect(self.mostrar)
+        self.ventana_restaurante.volver_main_signal.connect(self.volver_main)
+        self.ventana_restaurante.show()
         
     def mostrar_excursiones(self):
-        ventanaExc = VentanaExcursiones()
-        ventanaExc.show()
+        self.close()
+        self.ventana_excursiones = VentanaExcursiones()
+        self.ventana_excursiones.volver_habitaciones_signal.connect(self.mostrar)
+        self.ventana_excursiones.volver_main_signal.connect(self.volver_main)
+        self.ventana_excursiones.show()
     
     def mostrar_areas_recreativas(self):
-        ventanaAR = VentanaAreas()
-        ventanaAR.show()
+        self.close()
+        self.ventana_areas = VentanaAreas()
+        self.ventana_areas.volver_habitaciones_signal.connect(self.mostrar)
+        self.ventana_areas.volver_main_signal.connect(self.volver_main)
+        self.ventana_areas.show()
     
-    def mostrar_reservar(self):
-        pass
+    
+    def mostrar(self):
+        self.close()
+        self.show()
+        
         
     def volver_main(self):
-        pass
+        self.close()
+        # Emitir la señal para volver a la ventana principal
+        self.volver_main_signal.emit()
+        
+
+
+        
             
     
         

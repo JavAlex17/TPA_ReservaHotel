@@ -2,9 +2,15 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
+from areaverde import VentanaAreas
+from excursiones import VentanaExcursiones
+
 
 
 class VentanaRestaurante(QDialog):
+    volver_main_signal = pyqtSignal()
+    volver_habitaciones_signal = pyqtSignal()
+    
     def __init__(self):
         super().__init__()
 
@@ -32,7 +38,7 @@ class VentanaRestaurante(QDialog):
         self.botonMenu.setPixmap(pixmap_btnmenu)
         self.botonMenu.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        #self.botonMenu.mousePressEvent = lambda event: self.abrirMenu()
+        self.botonMenu.mousePressEvent = lambda event: self.toggleMenu()
     
         appbar_layout.addWidget(self.botonMenu,0,0)
         
@@ -49,8 +55,7 @@ class VentanaRestaurante(QDialog):
         self.logo_appbar.setPixmap(pixmap_logo)
         self.logo_appbar.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         appbar_layout.addWidget(self.logo_appbar,0,2)
-        #Lambda event: es para ignorar el evento de moussePressEvent, pero que igualmente se llame a la funcion
-        self.logo_appbar.mousePressEvent = lambda event: self.volverMain()
+        
         
         #appbar como widget para agregarle color
         appbarWidget = QWidget()
@@ -59,6 +64,49 @@ class VentanaRestaurante(QDialog):
         appbarWidget.setFixedHeight(65)
         
         layout.addWidget(appbarWidget)
+        
+        # Crear el menú desplegable
+        self.menu = QWidget(self)
+        self.menu.setStyleSheet("background-color: #fefeff; border: 1px solid #BAB78D;")
+        self.menu.setFixedWidth(250)
+        self.menu.setGeometry(11, 75, 150, self.height() - 80)  # Posicionar debajo de la appBar
+        self.menu.raise_()  # Asegurar que el menú está sobre todos los demás widgets
+        
+        
+        menu_layout = QVBoxLayout(self.menu)
+        opciones = ["Habitaciones", "Restaurante", "Excursiones", "Áreas Recreativas", "Volver al Inicio"]
+        for opcion in opciones:
+
+            boton = QPushButton(opcion, self.menu)
+            boton.setStyleSheet("QPushButton { background-color: transparent; color: #686961; border: none; text-align: left; padding-left: 10px; font-size: 20px;} QPushButton:hover { background-color: #a6a6a6; color: #fefeff; }")
+            boton.setFont(QFont(font, 12))
+            boton.setFixedHeight(50)
+            
+            menu_layout.addWidget(boton)
+        
+        #######
+            # Añadir borde inferior a todos los botones excepto al último
+            if opcion != opciones[-1]:
+                separator = QLabel(self.menu)
+                separator.setFixedHeight(1)
+                separator.setStyleSheet("background-color: #BAB78D;")
+                menu_layout.addWidget(separator)
+            
+            # Conectar cada botón a su respectiva función
+            if opcion == "Habitaciones":
+                boton.clicked.connect(self.mostrar_habitaciones)
+            elif opcion == "Excursiones":
+                boton.clicked.connect(self.mostrar_excursiones)
+            elif opcion == "Áreas Recreativas":
+                boton.clicked.connect(self.mostrar_areas_recreativas)
+            elif opcion == "Volver al Inicio":
+                boton.clicked.connect(self.volver_main)
+                
+        #######
+        
+        self.menu.hide()
+        
+        
         
         layout_titulo = QVBoxLayout()
         # Título
@@ -136,6 +184,15 @@ class VentanaRestaurante(QDialog):
         texto.setAlignment(Qt.AlignmentFlag.AlignBottom)
         layout.addWidget(texto)
         
+    # Función para mostrar/ocultar el menú
+    def toggleMenu(self):
+        if self.menu.isVisible():
+            self.menu.hide()
+        else:
+            self.menu.show()
+            self.menu.raise_()  # Asegurar que el menú está sobre todos los demás widgets
+
+        
     #Funcion para actualizar la informacion
     #Informacion estilizada con html
     def actualizar_info(self):
@@ -166,7 +223,34 @@ class VentanaRestaurante(QDialog):
         self.image_label.setPixmap(pixmap)
         
         
-    def volverMain(self):
-        pass
+    def mostrar_habitaciones(self):
+        self.close()
+        self.volver_habitaciones_signal.emit()
+    
+        
+    def mostrar_excursiones(self):
+        self.close()
+        self.ventana_excursiones = VentanaExcursiones()
+        self.ventana_excursiones.volver_restaurante_signal.connect(self.mostrar)
+        self.ventana_excursiones.volver_main_signal.connect(self.volver_main)
+        self.ventana_excursiones.show()
+    
+    def mostrar_areas_recreativas(self):
+        self.close()
+        self.ventana_areas = VentanaAreas()
+        self.ventana_areas.volver_restaurante_signal.connect(self.mostrar)
+        self.ventana_areas.volver_main_signal.connect(self.volver_main)
+        self.ventana_areas.show()
+    
+    def mostrar(self):
+        self.close()
+        self.show()
+
+        
+    def volver_main(self):
+        self.close()
+        # Emitir la señal para volver a la ventana principal
+        self.volver_main_signal.emit()
+            
             
     

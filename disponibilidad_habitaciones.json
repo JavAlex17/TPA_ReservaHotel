@@ -1,0 +1,24 @@
+{
+  "habitaciones": [
+    {
+      "nombre": "Habitación Ejecutiva Individual",
+      "disponibilidad": 5
+    },
+    {
+      "nombre": "Habitación Ejecutiva Doble",
+      "disponibilidad": 10
+    },
+    {
+      "nombre": "Habitación Familiar",
+      "disponibilidad": 10
+    },
+    {
+      "nombre": "PentHouse Volcanes",
+      "disponibilidad": 1
+    },
+    {
+      "nombre": "PentHouse Pacífico",
+      "disponibilidad": 1
+    }
+  ]
+}
