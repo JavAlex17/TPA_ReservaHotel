@@ -1,11 +1,13 @@
+import json
 import locale
+import os
 import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
-
 class Reservas(QDialog):
+    volver_main_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
 
@@ -25,6 +27,16 @@ class Reservas(QDialog):
         # Contenedor horizontal para título y logo
         title_logo_layout = QGridLayout()
         title_logo_layout.setContentsMargins(10, 0, 10, 0)
+        
+        # Botón para volver a Main
+        self.volver_main_button = QPushButton()
+        self.volver_main_button.setIcon(QIcon("images/back.png"))
+        self.volver_main_button.setIconSize(QSize(24, 24))
+        self.volver_main_button.setFixedSize(40, 40)  # Ajusta el tamaño
+        self.volver_main_button.clicked.connect(self.volver_main)
+        
+        title_logo_layout.addWidget(self.volver_main_button, 0, 0)
+
 
         # Espaciador para empujar el título al centro (1/3 del ancho total)
         left_spacer = QSpacerItem(0, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -83,21 +95,35 @@ class Reservas(QDialog):
         buttons_layout.addWidget(self.delete_button)
 
         main_layout.addLayout(buttons_layout)
-
-        self.reservas = self.generate_dummy_data()
+        
+        
+        # Ruta del archivo JSON
+        self.json_file = "disponibilidad_habitaciones.json"
+        self.data = self.load_data_from_file()
+        self.reservas = self.data.get('reservas', [])
+        self.habitaciones = self.data.get('habitaciones', [])
         self.load_data()
 
         # Conectar botones
         self.add_button.clicked.connect(self.add_reserva)
         self.edit_button.clicked.connect(self.edit_reserva)
         self.delete_button.clicked.connect(self.delete_reserva)
+        
+        
+        
+    def load_data_from_file(self):
+        if os.path.exists(self.json_file):
+            with open(self.json_file, 'r', encoding='utf-8') as file:
+                return json.load(file)
+        return {"habitaciones": [], "reservas": []}
 
-    def generate_dummy_data(self):
-        return [
-            {"id_reserva": "001", "nombre_cliente": "Juan Pérez", "habitacion": "Ejecutiva Individual", "servicio_restaurante": "Plan Básico", "excursion": "Excursión Plus", "fecha_inicio": "2024-07-01", "fecha_salida": "2024-07-05", "precio": "$70.000", "metodo_pago": "Tarjeta de Crédito", "telefono": "123456789", "status": "En espera"},
-            {"id_reserva": "002", "nombre_cliente": "María López", "habitacion": "Ejecutiva Doble", "servicio_restaurante": "Plan Básico", "excursion": "Ninguna",  "fecha_inicio": "2024-07-02", "fecha_salida": "2024-07-06", "precio": "$80.000", "metodo_pago": "Efectivo", "telefono": "987654321", "status": "Check-in"},
-            {"id_reserva": "003", "nombre_cliente": "Carlos Díaz", "habitacion": "Familiar", "servicio_restaurante": "Plan Básico", "excursion": "Excursión Heavy", "fecha_inicio": "2024-07-03", "fecha_salida": "2024-07-07", "precio": "$200.000", "metodo_pago": "Tarjeta de Débito", "telefono": "123123123", "status": "Check-out"},
-        ]
+
+    def save_data_to_file(self):
+        self.data['reservas'] = self.reservas
+        with open(self.json_file, 'w', encoding='utf-8') as file:
+            json.dump(self.data, file, ensure_ascii=False, indent=4)
+
+
     
     def load_data(self):
         self.reservas_list.clear()
@@ -115,7 +141,8 @@ class Reservas(QDialog):
                           f"Habitación: {reserva['habitacion']}\n"
                           f"Restaurante: {reserva['servicio_restaurante']}\n"
                           f"Excursión: {reserva['excursion']}\n"
-                          f"Fecha: {reserva['fecha_inicio']} - {reserva['fecha_salida']}\n"
+                          f"Fecha inicio: {reserva['fecha_inicio']}\n"
+                          f"Fecha salida: {reserva['fecha_salida']}\n"
                           f"Precio: {reserva['precio']}\n"
                           f"Método de pago: {reserva['metodo_pago']}\n"
                           f"Número de teléfono: {reserva['telefono']}")
@@ -125,7 +152,7 @@ class Reservas(QDialog):
             list_item.setFont(custom_font)  # Aplicar la fuente personalizada
             list_item.setForeground(QColor("#686961"))  # Color del texto (en este caso, un gris oscuro)
             # Ajustar altura del item para separar líneas
-            list_item.setSizeHint(QSize(list_item.sizeHint().width(), 150)) 
+            list_item.setSizeHint(QSize(list_item.sizeHint().width(), 200)) 
             
             list_item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
         
@@ -158,19 +185,33 @@ class Reservas(QDialog):
             nueva_reserva = dialog.get_reserva()
             nueva_reserva["id_reserva"] = new_id
             self.reservas.append(nueva_reserva)
+            self.update_habitacion_disponibilidad(nueva_reserva["habitacion"], nueva_reserva["status"])
+            self.save_data_to_file()
             self.load_data()
-            
 
     def edit_reserva(self):
         selected_row = self.reservas_list.currentRow()
         if selected_row >= 0:
             reserva = self.reservas[selected_row]
+            old_status = reserva["status"]
+            old_habitacion = reserva["habitacion"]  # Habitación anterior
+        
             dialog = EditReservaDialog(reserva)
             if dialog.exec():
-               nueva_reserva = dialog.get_reserva()
-               nueva_reserva["id_reserva"] = reserva["id_reserva"]  # Mantener 'id_reserva' original
-               self.reservas[selected_row] = nueva_reserva
-               self.load_data()
+                nueva_reserva = dialog.get_reserva()
+                nueva_reserva["id_reserva"] = reserva["id_reserva"]  # Mantener 'id_reserva' original
+                self.reservas[selected_row] = nueva_reserva
+            
+               # Actualizar disponibilidad de la habitación anterior
+                if old_habitacion != nueva_reserva["habitacion"]:
+                    self.update_habitacion_disponibilidad(old_habitacion, "Check-out", old_status)
+                    self.update_habitacion_disponibilidad(nueva_reserva["habitacion"], nueva_reserva["status"])
+
+                else:
+                    self.update_habitacion_disponibilidad(nueva_reserva["habitacion"], nueva_reserva["status"], old_status)
+                
+                self.save_data_to_file()
+                self.load_data()
 
     def delete_reserva(self):
         selected_row = self.reservas_list.currentRow()
@@ -181,8 +222,26 @@ class Reservas(QDialog):
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
             if confirmation == QMessageBox.StandardButton.Yes:
-                del self.reservas[selected_row]
+                reserva = self.reservas.pop(selected_row)
+                if reserva["status"] in ["En espera", "Check-in"]:
+                   self.update_habitacion_disponibilidad(reserva["habitacion"], "Check-out", reserva["status"])
+                self.save_data_to_file()
                 self.load_data()
+
+    def update_habitacion_disponibilidad(self, habitacion_nombre, nuevo_status, old_status=None):
+        for habitacion in self.habitaciones:
+            if habitacion["nombre"] == habitacion_nombre:
+                if old_status in ["En espera", "Check-in"]:
+                   habitacion["disponibilidad"] += 1
+                if nuevo_status in ["En espera", "Check-in"]:
+                   habitacion["disponibilidad"] -= 1
+                break
+
+            
+    def volver_main(self):
+        self.close()
+        # Emitir la señal para volver a la ventana principal
+        self.volver_main_signal.emit()
 
 
 
@@ -214,8 +273,22 @@ class EditReservaDialog(QDialog):
         self.excursion.addItems(["Ninguna"] + ["Excursión Light", "Excursión Plus", "Excursión Heavy"])
         self.excursion.setCurrentText("Ninguna" if reserva['excursion'] == 0 else reserva['excursion'])
         
-        self.fecha_inicio = QLineEdit(reserva['fecha_inicio'])
-        self.fecha_salida = QLineEdit(reserva['fecha_salida'])
+        self.fecha_inicio = QDateEdit()
+        self.fecha_inicio.setStyleSheet("color: #686961;")
+        self.fecha_inicio.setCalendarPopup(True)
+        if reserva["fecha_inicio"]:
+            self.fecha_inicio.setDate(QDate.fromString(reserva["fecha_inicio"], "dd-MM-yyyy"))
+        else:
+            self.fecha_inicio.setDate(QDate.currentDate())
+
+        self.fecha_salida = QDateEdit()
+        self.fecha_salida.setStyleSheet("color: #686961;")
+        self.fecha_salida.setCalendarPopup(True)
+        if reserva["fecha_salida"]:
+            self.fecha_salida.setDate(QDate.fromString(reserva["fecha_salida"], "dd-MM-yyyy"))
+        else:
+            self.fecha_salida.setDate(QDate.currentDate())
+
         
         self.precio = QLabel(reserva['precio'])
         
@@ -255,8 +328,8 @@ class EditReservaDialog(QDialog):
             "habitacion": self.habitacion.currentText(),
             "servicio_restaurante": self.servicio_restaurante.currentText() if self.servicio_restaurante.currentText() != "Ninguno" else 0,
             "excursion": self.excursion.currentText() if self.excursion.currentText() != "Ninguna" else 0,
-            "fecha_inicio": self.fecha_inicio.text(),
-            "fecha_salida": self.fecha_salida.text(),
+            "fecha_inicio": self.fecha_inicio.date().toString("dd-MM-yyyy"),
+            "fecha_salida": self.fecha_salida.date().toString("dd-MM-yyyy"),
             "precio": self.precio.text(),
             "metodo_pago": self.metodo_pago.currentText(),
             "telefono": self.telefono.text(),
@@ -302,3 +375,4 @@ class EditReservaDialog(QDialog):
 
         # Mostrar el precio calculado
         self.precio.setText(precio_formateado)
+        

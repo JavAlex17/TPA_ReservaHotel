@@ -4,6 +4,7 @@ from PyQt6.QtCore import *
 
 import json
 from areaverde import VentanaAreas
+from contacto import VentanaContacto
 from excursiones import VentanaExcursiones
 from restaurante import VentanaRestaurante
 
@@ -75,7 +76,7 @@ class VentanaHabitaciones(QDialog):
         
         
         menu_layout = QVBoxLayout(self.menu)
-        opciones = ["Habitaciones", "Restaurante", "Excursiones", "Áreas Recreativas", "Volver al Inicio"]
+        opciones = ["Restaurante", "Excursiones", "Áreas Comunes", "Contacto", "Volver al Inicio"]
         for opcion in opciones:
 
             boton = QPushButton(opcion, self.menu)
@@ -98,8 +99,10 @@ class VentanaHabitaciones(QDialog):
                 boton.clicked.connect(self.mostrar_restaurante)
             elif opcion == "Excursiones":
                 boton.clicked.connect(self.mostrar_excursiones)
-            elif opcion == "Áreas Recreativas":
+            elif opcion == "Áreas Comunes":
                 boton.clicked.connect(self.mostrar_areas_recreativas)
+            elif opcion == "Contacto":
+                boton.clicked.connect(self.mostrar_contacto)
             elif opcion == "Volver al Inicio":
                 boton.clicked.connect(self.volver_main)
                 
@@ -238,22 +241,25 @@ class VentanaHabitaciones(QDialog):
         self.close()
         self.ventana_restaurante = VentanaRestaurante()
         self.ventana_restaurante.volver_habitaciones_signal.connect(self.mostrar)
-        self.ventana_restaurante.volver_main_signal.connect(self.volver_main)
         self.ventana_restaurante.show()
         
     def mostrar_excursiones(self):
         self.close()
         self.ventana_excursiones = VentanaExcursiones()
         self.ventana_excursiones.volver_habitaciones_signal.connect(self.mostrar)
-        self.ventana_excursiones.volver_main_signal.connect(self.volver_main)
         self.ventana_excursiones.show()
     
     def mostrar_areas_recreativas(self):
         self.close()
         self.ventana_areas = VentanaAreas()
         self.ventana_areas.volver_habitaciones_signal.connect(self.mostrar)
-        self.ventana_areas.volver_main_signal.connect(self.volver_main)
         self.ventana_areas.show()
+        
+    def mostrar_contacto(self):
+        self.close()
+        self.ventana_contacto = VentanaContacto()
+        self.ventana_contacto.volver_habitaciones_signal.connect(self.mostrar)
+        self.ventana_contacto.show()
     
     
     def mostrar(self):

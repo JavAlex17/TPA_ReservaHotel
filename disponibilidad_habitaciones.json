@@ -1,24 +1,39 @@
 {
-  "habitaciones": [
-    {
-      "nombre": "Habitación Ejecutiva Individual",
-      "disponibilidad": 5
-    },
-    {
-      "nombre": "Habitación Ejecutiva Doble",
-      "disponibilidad": 10
-    },
-    {
-      "nombre": "Habitación Familiar",
-      "disponibilidad": 10
-    },
-    {
-      "nombre": "PentHouse Volcanes",
-      "disponibilidad": 1
-    },
-    {
-      "nombre": "PentHouse Pacífico",
-      "disponibilidad": 1
-    }
-  ]
+    "habitaciones": [
+        {
+            "nombre": "Ejecutiva Individual",
+            "disponibilidad": 10
+        },
+        {
+            "nombre": "Ejecutiva Doble",
+            "disponibilidad": 10
+        },
+        {
+            "nombre": "Familiar",
+            "disponibilidad": 9
+        },
+        {
+            "nombre": "PentHouse Volcanes",
+            "disponibilidad": 1
+        },
+        {
+            "nombre": "PentHouse Pacífico",
+            "disponibilidad": 1
+        }
+    ],
+    "reservas": [
+        {
+            "nombre_cliente": "Javiera",
+            "habitacion": "Familiar",
+            "servicio_restaurante": "Plan Básico",
+            "excursion": "Excursión Plus",
+            "fecha_inicio": "17-07-2024",
+            "fecha_salida": "25-07-2024",
+            "precio": "$185,000",
+            "metodo_pago": "Efectivo",
+            "telefono": "+56938483345",
+            "status": "Check-in",
+            "id_reserva": "001"
+        }
+    ]
 }

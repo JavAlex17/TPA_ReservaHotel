@@ -84,8 +84,9 @@ class MainWin(QMainWindow):
         
     def abrirAccesoRecepcionista(self):
         self.close()
-        loginRecepcionista = Login(main_win=self)
-        loginRecepcionista.exec()
+        self.loginRecepcionista = Login(main_win=self)
+        self.loginRecepcionista.volver_main_signal.connect(self.mostrarMainWin)
+        self.loginRecepcionista.exec()
         
     def mostrarMainWin(self):
         self.show()

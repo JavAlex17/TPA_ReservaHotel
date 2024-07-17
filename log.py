@@ -6,6 +6,7 @@ from PyQt6.QtCore import *
 from pagRecepcionista import Reservas
 
 class Login(QDialog):
+    volver_main_signal = pyqtSignal()
     def __init__(self, main_win=None):
         super().__init__()
         self.main_win = main_win
@@ -115,8 +116,9 @@ class Login(QDialog):
             for recepcionista in self.ListaRecepcionista:
                 if usuario in recepcionista and recepcionista[usuario] == password:
                     self.close()
-                    ingresarReservas = Reservas()
-                    ingresarReservas.exec()
+                    self.ingresarReservas = Reservas()
+                    self.ingresarReservas.volver_main_signal.connect(self.volverMain)
+                    self.ingresarReservas.exec()
                     return 
             if i == len(self.ListaRecepcionista):
                 print("Error en las credenciales")
